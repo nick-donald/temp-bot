@@ -1,8 +1,12 @@
-use bson::Bson;
+use bson::{Bson, Document};
 use mongodb::{Client, ThreadedClient};
 use mongodb::db::ThreadedDatabase;
+use mongodb::coll::options::{FindOptions, CursorType};
+use mongodb::cursor;
 
 use reading::Reading;
+
+const ORDER_DESC: i32 = -1;
 
 pub struct ReadingConn {
   host: &'static str,
@@ -30,7 +34,23 @@ impl ReadingConn {
 
   pub fn latest_reading(self) -> Option<Reading> {
     let coll = self.client.unwrap().db("test").collection("readings");
-    let resp = coll.find_one(None, None).ok().expect("No cursor");
+    let opts = FindOptions {
+      sort: Some(doc! { "_id" => ORDER_DESC }),
+      allow_partial_results: false,
+      no_cursor_timeout: false,
+      op_log_replay: false,
+      skip: 0,
+      limit: 0,
+      cursor_type: CursorType::NonTailable,
+      batch_size: cursor::DEFAULT_BATCH_SIZE,
+      comment: None,
+      max_time_ms: None,
+      modifiers: None,
+      projection: None,
+      read_preference: None
+    };
+
+    let resp = coll.find_one(None, Some(opts)).ok().expect("No cursor");
 
     match resp {
       Some(result) => {

@@ -9,6 +9,6 @@ fn main() {
     println!("connected!");
 
     let reading = conn.latest_reading().unwrap();
-    println!("temp: {}", reading.temp.unwrap());
+    println!("The temperature is {}, humidity is {}, taken at {}, {}", reading.temp.unwrap(), reading.humid.unwrap(), reading.lat.unwrap(), reading.long.unwrap());
   }
 }
