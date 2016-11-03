@@ -1,0 +1,9 @@
+[package]
+name = "temp-bot"
+version = "0.1.0"
+authors = ["Nick Donald <n.donald@celmatix.com>"]
+
+[dependencies]
+slack = "0.16.0"
+bson = "0.3.1"
+mongodb = "0.1.7"
